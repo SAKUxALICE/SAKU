@@ -28,15 +28,17 @@ function Extractor(file)
 		console.log('Try to fetch hlinks');
 		self.hlinks = [];
 
+		// only anonymously get hlinks
+		self.__anonymous_getHLinks__(cb);
 		// get hlinks according to account status
-		if(!page.bduss){
-			self.__anonymous_getHLinks__(cb);
-			return;
-		}
-		else{
-			self.__login_getHLinks__(cb);
-			return;
-		}
+		//if(!page.bduss){
+		//	self.__anonymous_getHLinks__(cb);
+		//	return;
+		//}
+		//else{
+		//	self.__login_getHLinks__(cb);
+		//	return;
+		//}
 	};
 	self.__login_getHLinks__ = function(cb){
 		console.log('Try to get hlinks when logged in');
