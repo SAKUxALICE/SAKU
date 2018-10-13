@@ -13,7 +13,7 @@ var page;
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 
 	var url = new URL(tab.url);
-	if(url.host != 'pan.baidu.com')return;
+	if(url.host != 'pan.baidu.com' && url.host != 'yun.baidu.com')return;
 	if(changeInfo.status != 'loading')return;
 
 	if(url.pathname == '/disk/home'){

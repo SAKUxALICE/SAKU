@@ -98,8 +98,8 @@ function resetConfig(){
 
 function refresh(url){
 	console.log('refreshing '+url.href);
+	if(url.host == 'yun.baidu.com')url.host = 'pan.baidu.com';
 	if(url.host != 'pan.baidu.com')return;
-
 	if(url.pathname == '/disk/home'){
 		if((url.hash.substr(0, 5) == '#list'||url.hash.substr(0, 5) == '#/all') && url.hash.indexOf('vmode') > 0){
 			page = new HomePage(url);

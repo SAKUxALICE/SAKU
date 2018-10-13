@@ -6,7 +6,9 @@ app.controller('control', function($scope, $http){
 		var page = background.page;
 		console.log('initializing popup');
 		chrome.tabs.getSelected(null, function(tab){
-			if(!page || !page.url || tab.url != page.url.href){
+			let tab_url = new URL(tab.url);
+			tab_url.host = 'pan.baidu.com';
+			if(!page || !page.url || tab_url != page.url.href){
 				background.refresh(new URL(tab.url));
 				$scope.init(background);
 				return;
