@@ -95,6 +95,16 @@ app.controller('control', function($scope, $http){
 		}
 		$scope.background.page.downloadFile($scope.fileList[idx]);
 	};
+	// download all files through rpc
+	$scope.downloadAll = function(){
+		var downloaded = false;
+		$scope.fileList.forEach(function(file, idx){
+			if(!file.hlinks || !file.hlinks.length)return;
+			downloaded = true;
+			$scope.download(idx);
+		});
+		if(!downloaded)$scope.message = 'Warning: HLinks should be generated before download!';
+	};
 	// refresh vcode
 	$scope.refresh = function(){
 		new $scope.background.Error(-20).handle();
