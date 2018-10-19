@@ -222,7 +222,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 		}
 		return {'requestHeaders': headers};
 	},
-	{urls: ["*://pan.baidu.com/api/sharedownload*", "*://pan.baidu.com/api/download*", "*://d.pcs.baidu.com/file/*"]},
+	//{urls: ["*://pan.baidu.com/api/sharedownload*", "*://pan.baidu.com/api/download*", "*://d.pcs.baidu.com/file/*"]},
+	{urls: ["*://d.pcs.baidu.com/file/*"]},
 	['blocking', 'requestHeaders']
 );
 
