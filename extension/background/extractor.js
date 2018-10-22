@@ -18,14 +18,14 @@ function Extractor(file)
 		var additional = new_servers.filter(function(item){
 			return config.servers.indexOf(item) < 0;
 		});
-		if(additional.length > 0)console.log(additional);
+		if(additional.length > 0)log(additional);
 		config.servers = config.servers.concat(additional);
 		chrome.storage.local.set({'config': config});
 		cb(config.servers);
 	};
 	self.__getHLinks__ = function(cb){
 
-		console.log('Try to fetch hlinks');
+		log('Try to fetch hlinks');
 		self.hlinks = [];
 
 		// only anonymously get hlinks
@@ -41,7 +41,7 @@ function Extractor(file)
 		//}
 	};
 	self.__login_getHLinks__ = function(cb){
-		console.log('Try to get hlinks when logged in');
+		log('Try to get hlinks when logged in');
 		var parsed_glink = self.parsed_glink;
 
 		var pathnames = parsed_glink.pathname.split('/');
@@ -56,7 +56,7 @@ function Extractor(file)
 					return;
 				}
 
-				console.log('Get hlink list success');
+				log('Get hlink list success');
 
 				// create hlink list and update server list
 				var hlinks = res.urls.map(function(e){
@@ -81,7 +81,7 @@ function Extractor(file)
 		});
 	};
 	self.__anonymous_getHLinks__ = function(cb){
-		console.log('Try to anonymously get hlinks');
+		log('Try to anonymously get hlinks');
 		$.ajax({
 			url: self.file.glink,
 			type: 'HEAD',
@@ -89,7 +89,7 @@ function Extractor(file)
 			tryCount: 0,
 			retryLimit: 5,
 			success: function(res, status, request){
-				console.log('Catch glink successfully');
+				log('Catch glink successfully');
 				var tmp_hlink = request.getResponseHeader('url');
 				var parsed_hlink = new URL(tmp_hlink);
 				var hlinks = config.servers.map(function(e){
@@ -101,14 +101,14 @@ function Extractor(file)
 				cb(self.hlinks);
 			},
 			error: function(xhr, status, error){
-				console.log(xhr);
-				console.log(status);
-				console.log(error);
+				log(xhr);
+				log(status);
+				log(error);
 				if(xhr.status == 400 || xhr.status == 0){
 					this.tryCount += 1;
 					if(this.tryCount <= this.retryLimit){
-						console.log('retry...');
-						console.log('try count is: ' + this.tryCount);
+						log('retry...');
+						log('try count is: ' + this.tryCount);
 						$.ajax(this);
 						return;
 					}
@@ -119,13 +119,13 @@ function Extractor(file)
 	};
 	self.__filterHLinks__ = function(hlinks, cb){
 		// rule out useless hlinks by header testing
-		console.log('filtering hlinks');
+		log('filtering hlinks');
 		if(config.mode == 'rpc')self.__all_filterHLinks__(hlinks, cb);
 		else self.__fast_filterHLinks__(hlinks, cb);
 	};
 
 	self.__fast_filterHLinks__ = function(hlinks, cb){
-		console.log('look for the first successful hlink');
+		log('look for the first successful hlink');
 
 		// init filtering
 		var filtered = [];
@@ -170,7 +170,7 @@ function Extractor(file)
 	};
 
 	self.__all_filterHLinks__ = function(hlinks, cb){
-		console.log('filter hlinks for rpc download');
+		log('filter hlinks for rpc download');
 
 		// init filtering
 		var filtered = [];

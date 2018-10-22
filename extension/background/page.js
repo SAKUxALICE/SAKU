@@ -5,21 +5,21 @@ function BasePage()
 {
 	var self = this;
 	self.prev = function(){
-		console.log("prev");
+		log("prev");
 		if(self.pageno > 1){
 			self.pageno -= 1;
 			self.execute(function(){});
 		}
 	};
 	self.next = function(){
-		console.log("next");
+		log("next");
 		if(self.fileList.fileList.length == 100){
 			self.pageno += 1;
 			self.execute(function(){});
 		}
 	};
 	self.downloadFile = function(file){
-		console.log('downloading...');
+		log('start downloading...');
 		new DownloadManager(file).download();
 	};
 }
@@ -29,7 +29,7 @@ function SharePage(url)
 	BasePage.call(self);
 	// init
 	self.init = function(url){
-		console.log('initializing share page...');
+		log('initializing share page...');
 		self.url = url;
 		self.pageno = 1;
 		self.vcode = false;
@@ -43,7 +43,7 @@ function SharePage(url)
 
 	// get verification parameter extra
 	self.getExtra = function(cb){
-		console.log('getting parameter extra...');
+		log('getting parameter extra...');
 		chrome.cookies.get({url: 'https://pan.baidu.com/', name: 'BDCLND'}, function(cookie){
 			if(cookie){
 				var tmp = decodeURIComponent(cookie.value);
@@ -55,7 +55,7 @@ function SharePage(url)
 
 	// get yunData in share page
 	self.getShareYunData = function(cb){
-		console.log('getting yunData in share page...');
+		log('getting yunData in share page...');
 		$.ajax({
 			url: self.url.href,
 			tryCount: 0,
@@ -67,15 +67,15 @@ function SharePage(url)
 				if(err1 || err2){
 					this.tryCount += 1;
 					if(this.tryCount <= this.retryLimit){
-						console.log('retry...');
-						console.log('try count is: ' + this.tryCount);
+						log('retry...');
+						log('try count is: ' + this.tryCount);
 						var tmp = this;
 						setTimeout(function(){
 							$.ajax(tmp);
 						}, 1000);
 						return;
 					}
-					console.log('Fail to get yunData in share page');
+					log('Fail to get yunData in share page');
 					return;
 				}
 				var code = html.match(/yunData\.setData\(.*\)/);
@@ -85,16 +85,16 @@ function SharePage(url)
 				cb();
 			},
 			error: function(res0, res1, res2){
-				console.log(res0);
-				console.log(res1);
-				console.log(res2);
+				log(res0);
+				log(res1);
+				log(res2);
 			}
 		});
 	};
 
 	// list dir
 	self.listDir = function(cb){
-		console.log('listing dir...');
+		log('listing dir...');
 		$.ajax({
 			url: 'https://pan.baidu.com/share/list?uk='+self.yunData.uk+"&shareid="+self.yunData.shareid+'&dir='+getURLParameter(self.url, 'path')+"&bdstoken="+self.yunData.bdstoken+"&num=100&order=time&desc=1&clienttype=0&showempty=0&web=1&page="+self.pageno,
 			success: function(res){
@@ -103,7 +103,7 @@ function SharePage(url)
 					new Error(res.errno).handle();
 					return;
 				}
-				console.log("List dir succeeds");
+				log("List dir succeeds");
 				// good, we make it
 				if(res.list.length == 0){
 					return;
@@ -117,14 +117,14 @@ function SharePage(url)
 
 	// get glink
 	self.getGLinks = function(cb, verify=false, vcode=undefined, input=undefined){
-		console.log('getting glink list...');
+		log('getting glink list...');
 		var url = "http://pan.baidu.com/api/sharedownload?sign="+self.yunData.sign+"&timestamp="+self.yunData.timestamp;
 		var data = "encrypt=0&product=share&uk="+self.yunData.uk+"&primaryid="+self.yunData.shareid;
 		data += '&fid_list='+JSON.stringify(self.fileList.fsidList);
 		data += "&extra="+self.extra;
 		if(verify){
 			if(!vcode || !input){
-				console.log('GLink verification error.');
+				log('GLink verification error.');
 				return;
 			}
 			data += "&vcode_str="+vcode+"&vcode_input="+input;
@@ -155,7 +155,7 @@ function SharePage(url)
 	};
 	// main logic in share page
 	self.execute = function(cb){
-		console.log('share page main logic starts');
+		log('share page main logic starts');
 		self.getExtra(function(){
 			self.getShareYunData(function(){
 				var fileList = self.yunData.file_list.list;
@@ -186,7 +186,7 @@ function HomePage(url)
 
 	// init
 	self.init = function(url){
-		console.log('initializing home page');
+		log('initializing home page');
 		self.shorturl = '';
 		self.shareid = '';
 		self.url = url;
@@ -198,7 +198,7 @@ function HomePage(url)
 
 	// get yunData in home page
 	self.getUserYunData = function(cb){
-		console.log('getting yunData in home page...');
+		log('getting yunData in home page...');
 		$.ajax({
 			url: self.url.href,
 			success: function(html){
@@ -209,16 +209,16 @@ function HomePage(url)
 				cb();
 			},
 			error: function(res0, res1, res2){
-				console.log(res0);
-				console.log(res1);
-				console.log(res2);
+				log(res0);
+				log(res1);
+				log(res2);
 			}
 		});
 	};
 
 	// list dir
 	self.listDir = function(cb){
-		console.log('listing dir...');
+		log('listing dir...');
 		$.ajax({
 			url: 'https://pan.baidu.com/api/list?dir='+getURLParameter(self.url, 'path')+'&bdstoken='+self.yunData.bdstoken+'&num=100&order=name&desc=1&clienttype=0&showempty=0&web=1&page='+self.pageno+'&channel=chunlei&web=1&app_id=250528',
 			success: function(res){
@@ -227,7 +227,7 @@ function HomePage(url)
 					new Error(res.errno).handle();
 					return;
 				}
-				console.log("List dir succeeds");
+				log("List dir succeeds");
 				// good, we make it
 				if(res.list.length == 0){
 					return;
@@ -251,7 +251,7 @@ function HomePage(url)
 					new Error(res.errno).handle();
 					return;
 				}
-				console.log("Share success");
+				log("Share success");
 				if(fsidList.length > 1)self.shorturl = new URL(res.shorturl+'#list/path=%2F');
 				else self.shorturl = new URL(res.shorturl);
 				self.shareid = res.shareid;
@@ -272,7 +272,7 @@ function HomePage(url)
 					new Error(res.errno).handle();
 					return;
 				}
-				console.log("Unshare success");
+				log("Unshare success");
 			}
 		});
 	};
@@ -304,7 +304,7 @@ function SearchPage(url)
 					new Error(res.errno).handle();
 					return;
 				}
-				console.log("List dir succeeds");
+				log("List dir succeeds");
 				// good, we make it
 				if(res.list.length == 0){
 					return;
@@ -346,7 +346,7 @@ function FileList(fileList)
 		});
 	};
 	self.updateGLinks = function(fileList){
-		console.log('updating glink list');
+		log('updating glink list');
 		fileList.forEach(function(e){
 			var idx = self.fsidList.indexOf(e.fs_id);
 			self.fileList[idx].glink = e.dlink;
@@ -354,7 +354,7 @@ function FileList(fileList)
 		});
 	};
 	self.updateHLinks = function(file, hlinks){
-		console.log('updating hlink list');
+		log('updating hlink list');
 		var fsid = file.fid;
 		var idx = self.fsidList.indexOf(fsid);
 		self.fileList[idx].hlinks = hlinks;
@@ -363,7 +363,7 @@ function FileList(fileList)
 		var fsid = file.fid;
 		var idx = self.fsidList.indexOf(fsid);
 		if(self.fileList[idx].md5)return;
-		console.log('updating md5');
+		log('updating md5');
 		self.fileList[idx].md5 = md5;
 	};
 	self.init(fileList);
@@ -374,8 +374,8 @@ function Error(errno)
 	var self = this;
 	self.errno = errno;
 	self.handle = function(){
-		console.log('errno: '+self.errno);
 		if(self.errno == -20){
+			log('verification is required');
 			$.ajax({
 				url: 'https://pan.baidu.com/api/getvcode?prod=pan',
 				success: function(res){
@@ -383,6 +383,8 @@ function Error(errno)
 					updatePopup();
 				}
 			});
+		}else{
+			log('errno: '+self.errno);
 		}
 	};
 	// 2:	wrong parameters

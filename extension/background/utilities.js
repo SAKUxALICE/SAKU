@@ -98,6 +98,7 @@ function resetConfig(){
 
 function refresh(url){
 	console.log('refreshing '+url.href);
+	log_buffer = '';
 	if(url.host == 'yun.baidu.com')url.host = 'pan.baidu.com';
 	if(url.host != 'pan.baidu.com')return;
 	if(url.pathname == '/disk/home'){
@@ -139,11 +140,32 @@ function updatePopup(){
 	console.log('updating popup');
 	var $scope = views[0].angular.element(views[0].document.getElementById('app')).scope();
 	$scope.$apply(function(){
-		$scope.message = 'Loading...';
 		$scope.fileList = page.fileList.fileList;
 		$scope.fsidList = page.fileList.fsidList;
 		$scope.page = page;
 		$scope.vcode = page.vcode;
-		$scope.message = page.message;
 	});
+}
+
+function log(msg){
+	console.log(msg);
+	log_buffer += msg+'\n';
+
+	// if there is no popup, do nothing
+	var views = chrome.extension.getViews({
+		type: "popup"
+	});
+	if(!views.length){
+		console.log('No popup detected');
+		return;
+	}
+
+	// if there is a popup, update log message and clear buffer
+	var $scope = views[0].angular.element(views[0].document.getElementById('app')).scope();
+	var tmp_message = $scope.message + log_buffer;
+	$scope.$apply(function(){
+		$scope.message = tmp_message;
+	});
+	$scope.scrollDown();
+	log_buffer = '';
 }

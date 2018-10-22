@@ -57,13 +57,13 @@
 				</tr>
 			</table>
 			<div><button ng-click="prev()">&lt;</button>{{page.pageno}}<button ng-click="next()">&gt;</button></div>
-			<p>{{message}}</p>
 			<div ng-disabled="!vcode" ng-hide="!vcode">
 				<img ng-src='https://pan.baidu.com/genimage?{{vcode}}'>
 				<input type="text" ng-model="input">
 				<button ng-click="verify(input)">verify</button>
 				<button ng-click="refresh(input)">refresh</button>
 			</div>
+			<pre id='log' style='overflow:scroll;max-height:100px;border-style:solid;border-width:1px;margin-right:50px'>{{message}}</pre>
 		</div>
 		<textarea id="copy"></textarea>
 	</body>

@@ -9,6 +9,7 @@ chrome.storage.local.get('config', function(result){
 });
 
 var page;
+var log_buffer = '';
 //distinguish different url and carry out different operations
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 

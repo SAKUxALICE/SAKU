@@ -1,5 +1,5 @@
 var app = angular.module('popup', []);
-app.controller('control', function($scope, $http){
+app.controller('control', function($scope, $timeout){
 
 	// init
 	$scope.init = function(background){
@@ -14,7 +14,7 @@ app.controller('control', function($scope, $http){
 				return;
 			}
 			$scope.$apply(function(){
-				$scope.message = 'Loading...';
+				$scope.message = 'Starting...\n';
 				$scope.fileList = page.fileList.fileList;
 				$scope.page = page;
 				$scope.vcode = page.vcode;
@@ -29,15 +29,19 @@ app.controller('control', function($scope, $http){
 	// refresh page
 	$scope.clear = function(){
 		$scope.fileList = [];
-		$scope.background.refresh($scope.background.page.url);
-		$scope.message = 'Refreshing...';
+		$timeout(function(){
+			$scope.background.refresh($scope.background.page.url);
+		});
+		$scope.message = 'Refreshing...\n';
 	};
 	// generate hlinks for checked items
 	$scope.generate = function(){
 		var filtered = $scope.fileList.filter(function(file){
 			if(file.check)return true;
 		});
-		$scope.background.generate(filtered);
+		$timeout(function(){
+			$scope.background.generate(filtered);
+		});
 		$scope.uncheckAll();
 	};
 	// copy link to clipboard
@@ -45,12 +49,12 @@ app.controller('control', function($scope, $http){
 		if(type == 'hlink')$scope.textarea.val($scope.fileList[idx].hlinks[0]);
 		else $scope.textarea.val($scope.fileList[idx].glink);
 		if(!$scope.textarea.val()){
-			$scope.message = "This field is empty";
+			$scope.message += "This field is empty\n";
 			return;
 		}
 		$scope.textarea[0].select();
-		if(document.execCommand("copy"))$scope.message = "Copy success";
-		else $scope.message = "Copy failure";
+		if(document.execCommand("copy"))$scope.message += "Copy success\n";
+		else $scope.message += "Copy failure\n";
 		$scope.textarea.val('');
 	};
 	// copy all links to clipboard
@@ -68,12 +72,12 @@ app.controller('control', function($scope, $http){
 		}
 		$scope.textarea.val(links.join('\n'));
 		if(!$scope.textarea.val()){
-			$scope.message = "No links";
+			$scope.message += "No links\n";
 			return;
 		}
 		$scope.textarea[0].select();
-		if(document.execCommand("copy"))$scope.message = "Copy all success";
-		else $scope.message = "Copy failure";
+		if(document.execCommand("copy"))$scope.message += "Copy all success\n";
+		else $scope.message += "Copy failure\n";
 		$scope.textarea.val('');
 	};
 	// check all checker boxes
@@ -90,10 +94,12 @@ app.controller('control', function($scope, $http){
 	$scope.download = function(idx){
 		// check glink
 		if(!$scope.fileList[idx].hlinks || !$scope.fileList[idx].hlinks.length){
-			$scope.message = 'Warning: HLinks should be generated before download!';
+			$scope.message += 'Warning: HLinks should be generated before download!\n';
 			return;
 		}
-		$scope.background.page.downloadFile($scope.fileList[idx]);
+		$timeout(function(){
+			$scope.background.page.downloadFile($scope.fileList[idx]);
+		});
 	};
 	// download all files through rpc
 	$scope.downloadAll = function(){
@@ -103,15 +109,19 @@ app.controller('control', function($scope, $http){
 			downloaded = true;
 			$scope.download(idx);
 		});
-		if(!downloaded)$scope.message = 'Warning: HLinks should be generated before download!';
+		if(!downloaded)$scope.message += 'Warning: HLinks should be generated before download!\n';
 	};
 	// refresh vcode
 	$scope.refresh = function(){
-		new $scope.background.Error(-20).handle();
+		$timeout(function(){
+			new $scope.background.Error(-20).handle();
+		});
 	};
 	// verify and get glinks
 	$scope.verify = function(input){
-		$scope.background.page.getGLinks(function(){}, true, $scope.vcode, input);
+		$timeout(function(){
+			$scope.background.page.getGLinks(function(){}, true, $scope.vcode, input);
+		});
 		$scope.input = '';
 	};
 	// check whether this page is a share page
@@ -128,11 +138,20 @@ app.controller('control', function($scope, $http){
 	};
 
 	$scope.prev = function(){
-		$scope.background.page.prev();
+		$timeout(function(){
+			$scope.background.page.prev();
+		});
 	};
 
 	$scope.next = function(){
-		$scope.background.page.next();
+		$timeout(function(){
+			$scope.background.page.next();
+		});
+	};
+
+	$scope.scrollDown = function(){
+		var element = document.getElementById("log");
+		element.scrollTop = element.scrollHeight;
 	};
 
 	// start init

@@ -4,7 +4,7 @@ function DownloadManager(file)
 
 	self.download = function(){
 		if(!self.file.hlinks){
-			page.message = 'Warning: HLinks should be obtained before download!';
+			log('Warning: HLinks should be obtained before download!');
 			updatePopup();
 			return;
 		}
@@ -53,11 +53,12 @@ function DownloadManager(file)
 			data: JSON.stringify(jsonreq),
 			dataType: 'json',
 			success: function(res){
-				page.message = '"'+self.file.name+'"'+' is added to '+self.rpcInterface+'. The speed is '+hlink.searchParams.get('csl');
+				log('"'+self.file.name+'"'+' is added to '+self.rpcInterface+'. The speed is '+hlink.searchParams.get('csl'));
+				log('It takes some time for baidudl_rpc/aria2c to start downloading, several seconds or 1-2 minutes');
 				updatePopup();
 			},
 			error: function(){
-				page.message = 'Error: Cannot send requests to RPC server. Please make sure baidu-dl_rpc or aria2 is running.';
+				log('Error: Cannot send requests to RPC server. Please make sure baidu-dl_rpc or aria2 is running.')
 				updatePopup();
 			}
 		});
