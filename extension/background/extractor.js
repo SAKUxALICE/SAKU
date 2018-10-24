@@ -101,10 +101,10 @@ function Extractor(file)
 				cb(self.hlinks);
 			},
 			error: function(xhr, status, error){
-				log(xhr);
-				log(status);
+				console.log(xhr);
+				console.log(status);
 				log(error);
-				if(xhr.status == 400 || xhr.status == 0){
+				if(xhr.status != 200){
 					this.tryCount += 1;
 					if(this.tryCount <= this.retryLimit){
 						log('retry...');
