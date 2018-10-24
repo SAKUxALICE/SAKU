@@ -3,11 +3,24 @@ app.controller('control', function($scope, $timeout){
 
 	// init
 	$scope.init = function(background){
-		var page = background.page;
 		console.log('initializing popup');
+		chrome.cookies.get({url: 'https://pan.baidu.com/', name: 'BDUSS'}, function(cookie){
+			var bduss = cookie? cookie.value:'';
+			if(!bduss)$scope.$apply(function(){
+				$scope.message = 'You need to login first!';
+				console.log($scope);
+			});
+			else{
+				$scope.execute(background);
+			}
+		});
+	};
+
+	$scope.execute = function(background){
+		var page = background.page;
 		chrome.tabs.getSelected(null, function(tab){
-			let tab_url = new URL(tab.url);
-			tab_url.host = 'pan.baidu.com';
+			var tab_url = new URL(tab.url);
+			if(tab_url.host == 'yun.baidu.com')tab_url.host = 'pan.baidu.com';
 			if(!page || !page.url || tab_url != page.url.href){
 				background.refresh(new URL(tab.url));
 				$scope.init(background);
@@ -25,7 +38,7 @@ app.controller('control', function($scope, $timeout){
 				$scope.optionsPage = "chrome://extensions/?options="+chrome.runtime.id;
 			});
 		});
-	};
+	}
 	// refresh page
 	$scope.clear = function(){
 		$scope.fileList = [];
