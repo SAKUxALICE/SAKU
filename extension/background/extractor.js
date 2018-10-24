@@ -131,6 +131,7 @@ function Extractor(file)
 		var filtered = [];
 		var promises = hlinks.map(function(e, i){
 			var func = function(){
+				log('Trying...');
 				var promise = $.ajax({
 					url: e,
 					type: 'HEAD',
