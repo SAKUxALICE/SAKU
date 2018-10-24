@@ -87,7 +87,7 @@ function Extractor(file)
 			type: 'HEAD',
 			timeout: 3000,
 			tryCount: 0,
-			retryLimit: 5,
+			retryLimit: 10,
 			success: function(res, status, request){
 				log('Catch glink successfully');
 				var tmp_hlink = request.getResponseHeader('url');
