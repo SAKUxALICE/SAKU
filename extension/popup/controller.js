@@ -49,12 +49,12 @@ app.controller('control', function($scope, $timeout){
 		if(type == 'hlink')$scope.textarea.val($scope.fileList[idx].hlinks[0]);
 		else $scope.textarea.val($scope.fileList[idx].glink);
 		if(!$scope.textarea.val()){
-			$scope.message += "This field is empty\n";
+			$scope.log("This field is empty");
 			return;
 		}
 		$scope.textarea[0].select();
-		if(document.execCommand("copy"))$scope.message += "Copy success\n";
-		else $scope.message += "Copy failure\n";
+		if(document.execCommand("copy"))$scope.log("Copy success");
+		else $scope.log("Copy failure");
 		$scope.textarea.val('');
 	};
 	// copy all links to clipboard
@@ -72,12 +72,12 @@ app.controller('control', function($scope, $timeout){
 		}
 		$scope.textarea.val(links.join('\n'));
 		if(!$scope.textarea.val()){
-			$scope.message += "No links\n";
+			$scope.log("No links");
 			return;
 		}
 		$scope.textarea[0].select();
-		if(document.execCommand("copy"))$scope.message += "Copy all success\n";
-		else $scope.message += "Copy failure\n";
+		if(document.execCommand("copy"))$scope.log("Copy all success");
+		else $scope.log("Copy failure");
 		$scope.textarea.val('');
 	};
 	// check all checker boxes
@@ -94,7 +94,7 @@ app.controller('control', function($scope, $timeout){
 	$scope.download = function(idx){
 		// check glink
 		if(!$scope.fileList[idx].hlinks || !$scope.fileList[idx].hlinks.length){
-			$scope.message += 'Warning: HLinks should be generated before download!\n';
+			$scope.log('Warning: HLinks should be generated before download!');
 			return;
 		}
 		$timeout(function(){
@@ -109,7 +109,7 @@ app.controller('control', function($scope, $timeout){
 			downloaded = true;
 			$scope.download(idx);
 		});
-		if(!downloaded)$scope.message += 'Warning: HLinks should be generated before download!\n';
+		if(!downloaded)$scope.log('Warning: HLinks should be generated before download!');
 	};
 	// refresh vcode
 	$scope.refresh = function(){
@@ -147,6 +147,11 @@ app.controller('control', function($scope, $timeout){
 		$timeout(function(){
 			$scope.background.page.next();
 		});
+	};
+
+	$scope.log = function(msg){
+		$scope.message += msg+'\n';
+		$scope.scrollDown();
 	};
 
 	$scope.scrollDown = function(){
