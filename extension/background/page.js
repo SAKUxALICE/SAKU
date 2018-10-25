@@ -194,6 +194,9 @@ function HomePage(url)
 		self.yunData = [];
 		self.fileList = [];
 		self.sharePage = undefined;
+		chrome.cookies.get({url: 'https://pan.baidu.com/', name: 'BDUSS'}, function(cookie){
+			self.bduss = cookie? cookie.value:'';
+		});
 	};
 
 	// get yunData in home page
