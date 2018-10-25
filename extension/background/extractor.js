@@ -29,16 +29,16 @@ function Extractor(file)
 		self.hlinks = [];
 
 		// only anonymously get hlinks
-		self.__anonymous_getHLinks__(cb);
+		///self.__anonymous_getHLinks__(cb);
 		// get hlinks according to account status
-		//if(!page.bduss){
-		//	self.__anonymous_getHLinks__(cb);
-		//	return;
-		//}
-		//else{
-		//	self.__login_getHLinks__(cb);
-		//	return;
-		//}
+		if(!page.bduss){
+			self.__anonymous_getHLinks__(cb);
+			return;
+		}
+		else{
+			self.__login_getHLinks__(cb);
+			return;
+		}
 	};
 	self.__login_getHLinks__ = function(cb){
 		log('Try to get hlinks when logged in');
@@ -214,12 +214,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 		var index = -1;
 		for(var i=0; i<headers.length; i++){
 			if(headers[i].name == 'Cookie'){
-				index = i;
-				break;
+				headers[i].value = '';
 			}
-		}
-		if(index >= 0){
-			headers.splice(index, 1);
+			if(headers[i].name == 'User-Agent'){
+				headers[i].value = 'netdisk;2.2.2;pc;pc-mac;10.13.6;macbaiduyunguanjia';
+			}
 		}
 		return {'requestHeaders': headers};
 	},
