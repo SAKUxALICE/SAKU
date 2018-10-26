@@ -217,7 +217,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 				headers[i].value = '';
 			}
 			if(headers[i].name == 'User-Agent'){
-				headers[i].value = 'netdisk;2.2.2;pc;pc-mac;10.13.6;macbaiduyunguanjia';
+				headers[i].value = navigator.userAgent;
 			}
 		}
 		return {'requestHeaders': headers};
@@ -257,19 +257,19 @@ chrome.webRequest.onHeadersReceived.addListener(
 	['blocking', 'responseHeaders']
 );
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-	function(details){
-		var headers = details.requestHeaders;
-		var index = -1;
-		for(var i=0; i<headers.length; i++){
-			if(headers[i].name == 'User-Agent'){
-				index = i;
-				headers[index].value = 'netdisk;2.2.0;macbaiduyunguanjia';
-				break;
-			}
-		}
-		return {'requestHeaders': headers};
-	},
-	{urls: ['*://d.pcs.baidu.com/rest/2.0/pcs/file?*']},
-	['blocking', 'requestHeaders']
-);
+//chrome.webRequest.onBeforeSendHeaders.addListener(
+//	function(details){
+//		var headers = details.requestHeaders;
+//		var index = -1;
+//		for(var i=0; i<headers.length; i++){
+//			if(headers[i].name == 'User-Agent'){
+//				index = i;
+//				headers[index].value = 'netdisk;2.2.0;macbaiduyunguanjia';
+//				break;
+//			}
+//		}
+//		return {'requestHeaders': headers};
+//	},
+//	{urls: ['*://d.pcs.baidu.com/rest/2.0/pcs/file?*']},
+//	['blocking', 'requestHeaders']
+//);
