@@ -352,7 +352,9 @@ function FileList(fileList)
 		log('updating glink list');
 		fileList.forEach(function(e){
 			var idx = self.fsidList.indexOf(e.fs_id);
-			self.fileList[idx].glink = e.dlink;
+			var url = new URL(e.dlink);
+			url.host = 'c.pcs.baidu.com';
+			self.fileList[idx].glink = url.href;
 			self.fileList[idx].size = e.size;
 		});
 	};

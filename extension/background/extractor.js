@@ -43,7 +43,6 @@ function Extractor(file)
 	self.__login_getHLinks__ = function(cb){
 		log('Try to get hlinks when logged in');
 		var parsed_glink = self.parsed_glink;
-		parsed_glink.host = 'c.pcs.baidu.com';
 
 		var pathnames = parsed_glink.pathname.split('/');
 		var url = 'https://c.pcs.baidu.com/rest/2.0/pcs/file?dstime='+parsed_glink.searchParams.get('dstime')+'&version=2.2.0&vip=1&path='+pathnames[pathnames.length-1]+'&fid='+parsed_glink.searchParams.get('fid')+'&rt=sh&sign='+parsed_glink.searchParams.get('sign')+'&expires=8h&chkv=1&method=locatedownload&app_id=250528&esl=0&ver=4.0';
